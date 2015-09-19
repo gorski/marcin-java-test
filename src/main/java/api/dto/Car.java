@@ -1,9 +1,11 @@
 package api.dto;
 
+import javax.xml.bind.annotation.XmlRootElement;
+
 /**
  * @author Marcin Górski
  */
-
+@XmlRootElement(name = "car")
 public class Car {
 
     private Long id;

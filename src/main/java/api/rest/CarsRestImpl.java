@@ -5,6 +5,8 @@ import api.dto.ErrorDto;
 import api.exception.ApiException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletResponse;
@@ -23,9 +25,13 @@ public class CarsRestImpl implements CarsRest {
     private static long sequence = 1L;
 
     @Override
-    public Long add(Car car) {
+    public Long add(@RequestBody Car car) {
+        if (car.getMake() == null || car.getMake().isEmpty()) {
+            throw new ApiException("At least make has to be filled in.", HttpStatus.BAD_REQUEST);
+        }
         long id = sequence;
         sequence++;
+        car.setId(id);
         storage.put(id, car);
         return id;
     }
@@ -36,7 +42,7 @@ public class CarsRestImpl implements CarsRest {
     }
 
     @Override
-    public Car retrieveById(Long id) {
+    public Car retrieveById(@PathVariable("id") Long id) {
         final Car car = storage.get(id);
         if (car == null) {
             throw new ApiException("Car with id " + id + " not found.", HttpStatus.NOT_FOUND);
@@ -45,7 +51,7 @@ public class CarsRestImpl implements CarsRest {
     }
 
     @Override
-    public void remove(Long id) {
+    public void remove(@PathVariable("id") Long id) {
         final Car car = storage.get(id);
         if (car == null) {
             throw new ApiException("Car with id " + id + " not found.", HttpStatus.NOT_FOUND);
@@ -54,10 +60,10 @@ public class CarsRestImpl implements CarsRest {
     }
 
     @Override
-    public Car update(Car changes) {
-        final Car car = storage.get(changes.getId());
+    public Car update(@PathVariable("id") Long id, @RequestBody Car changes) {
+        final Car car = storage.get(id);
         if (car == null) {
-            throw new ApiException("Car with id " + changes.getId() + " not found.", HttpStatus.NOT_FOUND);
+            throw new ApiException("Car with id " + id + " not found.", HttpStatus.NOT_FOUND);
         }
         // assumption: entity contains only modified elements, therefore this ugly rewrite below (ORM will handle)
         if (changes.getMake() != null) {
@@ -70,7 +76,7 @@ public class CarsRestImpl implements CarsRest {
             car.setYearOfManufacture(changes.getYearOfManufacture());
         }
 
-        storage.put(changes.getId(), car);
+        storage.put(id, car);
         return car;
     }
 

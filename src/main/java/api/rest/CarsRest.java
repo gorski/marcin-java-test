@@ -20,11 +20,11 @@ public interface CarsRest {
     List<Car> retrieveAll();
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
-    Car retrieveById(@PathVariable("id") Long id);
+    Car retrieveById(Long id);
 
-    @RequestMapping(method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{id}",method = RequestMethod.DELETE)
     void remove(Long id);
 
-    @RequestMapping(method = RequestMethod.PUT)
-    Car update(Car toUpdate);
+    @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    Car update(Long id, Car toUpdate);
 }
