@@ -1,7 +1,6 @@
 package api.rest;
 
 import api.dto.Car;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -22,7 +21,7 @@ public interface CarsRest {
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
     Car retrieveById(Long id);
 
-    @RequestMapping(value = "/{id}",method = RequestMethod.DELETE)
+    @RequestMapping(value = "/{id}", method = RequestMethod.DELETE)
     void remove(Long id);
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
